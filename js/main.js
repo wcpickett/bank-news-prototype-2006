@@ -16,6 +16,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // AJAX figures navigation on bank detail page
     initFiguresNav();
     
+    // Financial chart functionality
+    initFinancialCharts();
+    
 });
 
 /**
@@ -260,4 +263,130 @@ function formatPublication(year, season) {
  */
 function initFinancialChart(elementId, data) {
     // Will implement when Chart.js is added
+}
+
+/**
+ * Initialize clickable financial rows for charting
+ */
+function initFinancialCharts() {
+    const section = document.getElementById('financial-section');
+    if (!section) return;
+    
+    const state = section.dataset.state;
+    const bankNo = section.dataset.bankNo;
+    const chartContainer = document.getElementById('financial-chart-container');
+    const chartTitle = document.getElementById('chart-title');
+    const chartClose = document.getElementById('chart-close');
+    const canvas = document.getElementById('financial-chart');
+    
+    if (!chartContainer || !canvas) return;
+    
+    let chartInstance = null;
+    let historyData = null;
+    
+    // Handle row clicks
+    section.querySelectorAll('.clickable-row').forEach(row => {
+        row.addEventListener('click', async function() {
+            const field = this.dataset.field;
+            const label = this.dataset.label;
+            
+            // Highlight selected row
+            section.querySelectorAll('.clickable-row').forEach(r => r.classList.remove('selected'));
+            this.classList.add('selected');
+            
+            // Load history data if not cached
+            if (!historyData) {
+                chartTitle.textContent = 'Loading...';
+                chartContainer.style.display = 'block';
+                
+                try {
+                    const url = `api-financial-history.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}`;
+                    const response = await fetch(url);
+                    historyData = await response.json();
+                    
+                    if (historyData.error) {
+                        chartTitle.textContent = 'Error loading data';
+                        return;
+                    }
+                } catch (err) {
+                    console.error('Failed to load history:', err);
+                    chartTitle.textContent = 'Error loading data';
+                    return;
+                }
+            }
+            
+            // Render chart
+            renderChart(field, label);
+        });
+    });
+    
+    // Close chart
+    if (chartClose) {
+        chartClose.addEventListener('click', function() {
+            chartContainer.style.display = 'none';
+            section.querySelectorAll('.clickable-row').forEach(r => r.classList.remove('selected'));
+            if (chartInstance) {
+                chartInstance.destroy();
+                chartInstance = null;
+            }
+        });
+    }
+    
+    function renderChart(field, label) {
+        chartTitle.textContent = label + ' Over Time';
+        chartContainer.style.display = 'block';
+        
+        // Extract labels and values
+        const labels = historyData.history.map(h => h.label);
+        const values = historyData.history.map(h => h[field] || 0);
+        
+        // Destroy existing chart
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        
+        // Create new chart
+        chartInstance = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label + ' ($000s)',
+                    data: values,
+                    borderColor: '#2c5aa0',
+                    backgroundColor: 'rgba(44, 90, 160, 0.1)',
+                    fill: true,
+                    tension: 0.1,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '$' + context.raw.toLocaleString() + ',000';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
 }

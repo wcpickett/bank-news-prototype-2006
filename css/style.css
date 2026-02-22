@@ -872,6 +872,78 @@ a:hover {
     font-size: 0.9rem;
 }
 
+/* Clickable financial rows */
+.clickable-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.clickable-row:hover {
+    background-color: #f0f7ff;
+}
+
+.clickable-row.selected {
+    background-color: #e3effc;
+}
+
+.clickable-row td:first-child {
+    position: relative;
+    padding-left: 20px;
+}
+
+.clickable-row td:first-child::before {
+    content: '📊';
+    position: absolute;
+    left: 4px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    font-size: 0.8rem;
+}
+
+.clickable-row:hover td:first-child::before,
+.clickable-row.selected td:first-child::before {
+    opacity: 1;
+}
+
+/* Financial chart container */
+.financial-chart-container {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.chart-header h3 {
+    margin: 0;
+}
+
+.chart-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0 5px;
+}
+
+.chart-close:hover {
+    color: #333;
+}
+
+#financial-chart {
+    width: 100%;
+    height: 300px;
+}
+
 @media (max-width: 600px) {
     .section-header-with-nav {
         flex-direction: column;

@@ -17,6 +17,7 @@ $pageTitle = $pageTitle ?? 'Bank Directory';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= h($pageTitle) ?> | Bank Directory</title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header class="site-header">

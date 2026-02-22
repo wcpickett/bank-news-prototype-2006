@@ -251,7 +251,7 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
             </div>
         </div>
         
-        <p class="table-note">* All figures in thousands</p>
+        <p class="table-note">* All figures in thousands — click any row to see historical chart</p>
         
         <div class="financial-tables" id="financial-tables">
             <div class="financial-table">
@@ -259,43 +259,43 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 <table>
                     <tbody>
                         <?php if ($financials['total_assets']): ?>
-                        <tr class="total-row">
+                        <tr class="total-row clickable-row" data-field="total_assets" data-label="Total Assets">
                             <td><strong>Total Assets</strong></td>
                             <td class="text-right"><strong><span data-field="total_assets"><?= formatCurrencyThousands($financials['total_assets']) ?></span></strong></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_loans']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="total_loans" data-label="Total Loans">
                             <td>Total Loans</td>
                             <td class="text-right"><span data-field="total_loans"><?= formatCurrencyThousands($financials['total_loans']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['cash_due']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="cash_due" data-label="Cash Due">
                             <td>Cash Due</td>
                             <td class="text-right"><span data-field="cash_due"><?= formatCurrencyThousands($financials['cash_due']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['securities']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="securities" data-label="Securities">
                             <td>Securities</td>
                             <td class="text-right"><span data-field="securities"><?= formatCurrencyThousands($financials['securities']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_investments']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="total_investments" data-label="Total Investments">
                             <td>Total Investments</td>
                             <td class="text-right"><span data-field="total_investments"><?= formatCurrencyThousands($financials['total_investments']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['fed_funds_sold']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="fed_funds_sold" data-label="Fed Funds Sold">
                             <td>Fed Funds Sold</td>
                             <td class="text-right"><span data-field="fed_funds_sold"><?= formatCurrencyThousands($financials['fed_funds_sold']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['all_other_assets']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="all_other_assets" data-label="All Other Assets">
                             <td>All Other Assets</td>
                             <td class="text-right"><span data-field="all_other_assets"><?= formatCurrencyThousands($financials['all_other_assets']) ?></span></td>
                         </tr>
@@ -309,43 +309,43 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 <table>
                     <tbody>
                         <?php if ($financials['capital_stock']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="capital_stock" data-label="Capital Stock">
                             <td>Capital Stock</td>
                             <td class="text-right"><span data-field="capital_stock"><?= formatCurrencyThousands($financials['capital_stock']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['surplus']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="surplus" data-label="Surplus">
                             <td>Surplus</td>
                             <td class="text-right"><span data-field="surplus"><?= formatCurrencyThousands($financials['surplus']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['undivided_profits']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="undivided_profits" data-label="Undivided Profits">
                             <td>Undivided Profits</td>
                             <td class="text-right"><span data-field="undivided_profits"><?= formatCurrencyThousands($financials['undivided_profits']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['retained_earnings']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="retained_earnings" data-label="Retained Earnings">
                             <td>Retained Earnings</td>
                             <td class="text-right"><span data-field="retained_earnings"><?= formatCurrencyThousands($financials['retained_earnings']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_deposits']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="total_deposits" data-label="Total Deposits">
                             <td>Total Deposits</td>
                             <td class="text-right"><span data-field="total_deposits"><?= formatCurrencyThousands($financials['total_deposits']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['shares']): ?>
-                        <tr>
+                        <tr class="clickable-row" data-field="shares" data-label="Shares">
                             <td>Shares</td>
                             <td class="text-right"><span data-field="shares"><?= formatCurrencyThousands($financials['shares']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['net_income']): ?>
-                        <tr class="total-row">
+                        <tr class="total-row clickable-row" data-field="net_income" data-label="Net Income">
                             <td><strong>Net Income</strong></td>
                             <td class="text-right"><strong><span data-field="net_income"><?= formatCurrencyThousands($financials['net_income']) ?></span></strong></td>
                         </tr>
@@ -353,6 +353,15 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                     </tbody>
                 </table>
             </div>
+        </div>
+        
+        <!-- Chart Container -->
+        <div class="financial-chart-container" id="financial-chart-container" style="display: none;">
+            <div class="chart-header">
+                <h3 id="chart-title">Historical Data</h3>
+                <button type="button" class="chart-close" id="chart-close">&times;</button>
+            </div>
+            <canvas id="financial-chart"></canvas>
         </div>
         
         <p class="figures-note" id="figures-note">
