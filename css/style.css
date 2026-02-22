@@ -848,6 +848,10 @@ a:hover {
     text-transform: uppercase;
 }
 
+.current-badge-hidden {
+    visibility: hidden;
+}
+
 .figures-note {
     margin-top: 15px;
     font-size: 0.9rem;

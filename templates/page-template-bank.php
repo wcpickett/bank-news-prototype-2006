@@ -213,6 +213,12 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
         <div class="section-header-with-nav">
             <h2>Financial Information</h2>
             <div class="figures-nav">
+                <?php if ($figIsCurrent): ?>
+                    <span class="current-badge" id="current-badge">Current</span>
+                <?php else: ?>
+                    <span class="current-badge current-badge-hidden" id="current-badge">Current</span>
+                <?php endif; ?>
+                
                 <?php if ($figOlderPub): ?>
                     <a href="<?= h($figBaseUrl . '&fig_year=' . $figOlderPub['year'] . '&fig_season=' . $figOlderPub['season']) ?>" 
                        class="fig-nav-btn fig-nav-older" 
@@ -227,9 +233,6 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 
                 <span class="figures-year-display" id="figures-year-display">
                     <?= h(formatPublication($figYear, $figSeason)) ?>
-                    <?php if ($figIsCurrent): ?>
-                        <span class="current-badge">Current</span>
-                    <?php endif; ?>
                 </span>
                 
                 <?php if ($figNewerPub): ?>

@@ -180,11 +180,17 @@ function loadFigures(state, bankNo, year, season) {
             }
             
             // Update year display
-            let displayHtml = data.displayYear;
-            if (data.isCurrent) {
-                displayHtml += ' <span class="current-badge">Current</span>';
+            display.textContent = data.displayYear;
+            
+            // Update current badge visibility
+            const badge = document.getElementById('current-badge');
+            if (badge) {
+                if (data.isCurrent) {
+                    badge.classList.remove('current-badge-hidden');
+                } else {
+                    badge.classList.add('current-badge-hidden');
+                }
             }
-            display.innerHTML = displayHtml;
             
             // Update nav buttons
             updateNavButton('.fig-nav-older', data.olderPub, state, bankNo, true);
