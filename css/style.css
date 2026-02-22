@@ -393,20 +393,11 @@ a:hover {
 .financial-table table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
 }
 
 .financial-table td {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
-}
-
-.financial-table td:first-child {
-    width: 60%;
-}
-
-.financial-table td:last-child {
-    width: 40%;
 }
 
 .financial-table .total-row td {
@@ -1019,12 +1010,6 @@ a:hover {
     /* Financial tables stack */
     .financial-tables {
         grid-template-columns: 1fr;
-    }
-    
-    /* Tables - wrap in scrollable container, don't change display */
-    .table-scroll-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
     }
     
     /* Officers list */

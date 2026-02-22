@@ -173,10 +173,10 @@ function loadFigures(state, bankNo, year, season) {
                 return;
             }
             
-            // Update figures values
+            // Update figures values - target only spans, not rows
             const figures = data.figures;
             for (const [field, value] of Object.entries(figures)) {
-                const el = document.querySelector(`[data-field="${field}"]`);
+                const el = document.querySelector(`span[data-field="${field}"]`);
                 if (el && value) {
                     el.textContent = value;
                 }
