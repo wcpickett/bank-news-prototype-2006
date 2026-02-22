@@ -92,7 +92,7 @@ function getLatestPublicationForInstitution($pdo, $state, $bankNo) {
  */
 function getPublicationsForInstitution($pdo, $state, $bankNo) {
     $stmt = $pdo->prepare("
-        SELECT DISTINCT pub_year, pub_season 
+        SELECT DISTINCT pub_year as year, pub_season as season 
         FROM institution_main 
         WHERE pub_state = ? AND bank_no = ?
         ORDER BY pub_year DESC, 

@@ -5,31 +5,24 @@
  * Expects these variables from router:
  *   $pdo, $currentState, $currentYear, $currentSeason
  *   $institution, $cityBranches, $otherBranches, $memberships
- *   $availablePublications, $bankNo
+ *   $financials, $figYear, $figSeason, $figIsCurrent
+ *   $figPrevPub, $figNextPub, $availablePublications, $bankNo
  */
 
 include 'includes/header.php';
+
+// Build base URL for figures navigation
+$figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode($bankNo);
 ?>
 
 <div class="page-header">
     <nav class="breadcrumb">
-        <a href="<?= buildUrl('search.php', ['state' => $currentState, 'year' => $currentYear, 'season' => $currentSeason]) ?>">Search</a>
+        <a href="<?= buildUrl('search.php', ['state' => $currentState]) ?>">Search</a>
         <span class="separator">/</span>
         <span class="current"><?= h($institution['name']) ?></span>
     </nav>
     <h1><?= h($institution['name']) ?></h1>
     <p class="institution-type"><?= h($institution['type_name']) ?></p>
-</div>
-
-<?php
-// Publication selector - scoped to this institution's available publications
-$baseUrl = 'bank.php';
-$extraParams = ['id' => $bankNo];
-include 'includes/publication-select.php';
-?>
-
-<div class="publication-label-bar">
-    Viewing: <?= h(formatPublication($currentYear, $currentSeason)) ?> | <?= h($currentState) ?>
 </div>
 
 <div class="institution-detail">
@@ -198,75 +191,100 @@ include 'includes/publication-select.php';
             ?>
             
             <?php if (!empty($roleOfficers)): ?>
-            <h3>Department Contacts</h3>
-            <div class="info-grid">
-                <?php foreach ($roleOfficers as $label => $name): ?>
-                <div class="info-item">
-                    <label><?= h($label) ?></label>
-                    <div><?= h($name) ?></div>
-                </div>
+            <h3>Department Officers</h3>
+            <dl class="role-officers">
+                <?php foreach ($roleOfficers as $role => $name): ?>
+                    <div class="role-item">
+                        <dt><?= h($role) ?></dt>
+                        <dd><?= h($name) ?></dd>
+                    </div>
                 <?php endforeach; ?>
-            </div>
+            </dl>
             <?php endif; ?>
         </div>
     </section>
     
-    <!-- Financial Snapshot -->
+    <!-- Financial Information -->
     <section class="detail-section">
-        <h2>Financial Snapshot</h2>
-        <p class="table-note">All figures in thousands of dollars</p>
+        <div class="section-header-with-nav">
+            <h2>Financial Information</h2>
+            <div class="figures-nav">
+                <?php if ($figPrevPub): ?>
+                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figPrevPub['year'] . '&fig_season=' . $figPrevPub['season']) ?>" 
+                       class="fig-nav-btn fig-nav-prev" title="Newer: <?= h(formatPublication($figPrevPub['year'], $figPrevPub['season'])) ?>">
+                        &lt;
+                    </a>
+                <?php else: ?>
+                    <span class="fig-nav-btn fig-nav-disabled">&lt;</span>
+                <?php endif; ?>
+                
+                <span class="figures-year-display">
+                    <?= h(formatPublication($figYear, $figSeason)) ?>
+                    <?php if ($figIsCurrent): ?>
+                        <span class="current-badge">Current</span>
+                    <?php endif; ?>
+                </span>
+                
+                <?php if ($figNextPub): ?>
+                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figNextPub['year'] . '&fig_season=' . $figNextPub['season']) ?>" 
+                       class="fig-nav-btn fig-nav-next" title="Older: <?= h(formatPublication($figNextPub['year'], $figNextPub['season'])) ?>">
+                        &gt;
+                    </a>
+                <?php else: ?>
+                    <span class="fig-nav-btn fig-nav-disabled">&gt;</span>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <p class="table-note">* All figures in thousands</p>
         
         <div class="financial-tables">
             <div class="financial-table">
                 <h3>Assets</h3>
                 <table>
                     <tbody>
-                        <?php if ($institution['net_loans']): ?>
-                        <tr>
-                            <td>Net Loans</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['net_loans']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['total_loans']): ?>
-                        <tr>
-                            <td>Total Loans</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['total_loans']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['cash_due']): ?>
-                        <tr>
-                            <td>Cash Due</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['cash_due']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['securities']): ?>
-                        <tr>
-                            <td>Securities</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['securities']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['total_investments']): ?>
-                        <tr>
-                            <td>Total Investments</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['total_investments']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['fed_funds_sold']): ?>
-                        <tr>
-                            <td>Fed Funds Sold</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['fed_funds_sold']) ?></td>
-                        </tr>
-                        <?php endif; ?>
-                        <?php if ($institution['all_other_assets']): ?>
-                        <tr>
-                            <td>All Other Assets</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['all_other_assets']) ?></td>
-                        </tr>
-                        <?php endif; ?>
+                        <?php if ($financials['total_assets']): ?>
                         <tr class="total-row">
                             <td><strong>Total Assets</strong></td>
-                            <td class="text-right"><strong><?= formatCurrencyThousands($institution['total_assets']) ?></strong></td>
+                            <td class="text-right"><strong><?= formatCurrencyThousands($financials['total_assets']) ?></strong></td>
                         </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['total_loans']): ?>
+                        <tr>
+                            <td>Total Loans</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['total_loans']) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['cash_due']): ?>
+                        <tr>
+                            <td>Cash Due</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['cash_due']) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['securities']): ?>
+                        <tr>
+                            <td>Securities</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['securities']) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['total_investments']): ?>
+                        <tr>
+                            <td>Total Investments</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['total_investments']) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['fed_funds_sold']): ?>
+                        <tr>
+                            <td>Fed Funds Sold</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['fed_funds_sold']) ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if ($financials['all_other_assets']): ?>
+                        <tr>
+                            <td>All Other Assets</td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['all_other_assets']) ?></td>
+                        </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -275,52 +293,58 @@ include 'includes/publication-select.php';
                 <h3>Capital &amp; Liabilities</h3>
                 <table>
                     <tbody>
-                        <?php if ($institution['capital_stock']): ?>
+                        <?php if ($financials['capital_stock']): ?>
                         <tr>
                             <td>Capital Stock</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['capital_stock']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['capital_stock']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['surplus']): ?>
+                        <?php if ($financials['surplus']): ?>
                         <tr>
                             <td>Surplus</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['surplus']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['surplus']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['undivided_profits']): ?>
+                        <?php if ($financials['undivided_profits']): ?>
                         <tr>
                             <td>Undivided Profits</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['undivided_profits']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['undivided_profits']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['retained_earnings']): ?>
+                        <?php if ($financials['retained_earnings']): ?>
                         <tr>
                             <td>Retained Earnings</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['retained_earnings']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['retained_earnings']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['total_deposits']): ?>
+                        <?php if ($financials['total_deposits']): ?>
                         <tr>
                             <td>Total Deposits</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['total_deposits']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['total_deposits']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['shares']): ?>
+                        <?php if ($financials['shares']): ?>
                         <tr>
                             <td>Shares</td>
-                            <td class="text-right"><?= formatCurrencyThousands($institution['shares']) ?></td>
+                            <td class="text-right"><?= formatCurrencyThousands($financials['shares']) ?></td>
                         </tr>
                         <?php endif; ?>
-                        <?php if ($institution['net_income']): ?>
+                        <?php if ($financials['net_income']): ?>
                         <tr class="total-row">
                             <td><strong>Net Income</strong></td>
-                            <td class="text-right"><strong><?= formatCurrencyThousands($institution['net_income']) ?></strong></td>
+                            <td class="text-right"><strong><?= formatCurrencyThousands($financials['net_income']) ?></strong></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
                 </table>
             </div>
         </div>
+        
+        <?php if (!$figIsCurrent): ?>
+        <p class="figures-note">
+            <a href="<?= h($figBaseUrl) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
+        </p>
+        <?php endif; ?>
     </section>
     
     <!-- Memberships -->
@@ -332,9 +356,7 @@ include 'includes/publication-select.php';
                 <li>
                     <a href="<?= buildUrl('membership.php', [
                         'state' => $currentState,
-                        'code' => $org['code'],
-                        'year' => $currentYear,
-                        'season' => $currentSeason
+                        'code' => $org['code']
                     ]) ?>">
                         <?= h($org['name']) ?>
                     </a>

@@ -619,6 +619,12 @@ a:hover {
     color: #0066cc;
 }
 
+.filter-separator {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
 .btn-block {
     width: 100%;
     margin-top: 15px;
@@ -763,5 +769,98 @@ a:hover {
     
     .text-search-form .btn {
         width: 100%;
+    }
+}
+
+/* ============================================================
+   FIGURES YEAR NAVIGATION
+   ============================================================ */
+
+.section-header-with-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.section-header-with-nav h2 {
+    margin-bottom: 0;
+}
+
+.figures-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.fig-nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.15s ease;
+}
+
+.fig-nav-btn:hover {
+    background: #f0f0f0;
+    border-color: #999;
+    text-decoration: none;
+}
+
+.fig-nav-disabled {
+    color: #ccc;
+    cursor: not-allowed;
+    background: #f8f8f8;
+}
+
+.fig-nav-disabled:hover {
+    background: #f8f8f8;
+    border-color: #ccc;
+}
+
+.figures-year-display {
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.current-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #28a745;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+.figures-note {
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .section-header-with-nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .figures-nav {
+        width: 100%;
+        justify-content: space-between;
     }
 }
