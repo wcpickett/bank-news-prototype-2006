@@ -121,17 +121,32 @@ function initFiguresNav() {
     
     // Attach click handlers to nav buttons
     section.addEventListener('click', function(e) {
+        // Handle arrow buttons
         const btn = e.target.closest('.fig-nav-btn');
-        if (!btn || btn.classList.contains('fig-nav-disabled')) return;
+        if (btn && !btn.classList.contains('fig-nav-disabled')) {
+            e.preventDefault();
+            
+            const year = btn.dataset.year;
+            const season = btn.dataset.season;
+            
+            if (year && season) {
+                loadFigures(state, bankNo, year, season);
+            }
+            return;
+        }
         
-        e.preventDefault();
-        
-        const year = btn.dataset.year;
-        const season = btn.dataset.season;
-        
-        if (!year || !season) return;
-        
-        loadFigures(state, bankNo, year, season);
+        // Handle "View current figures" link
+        const currentLink = e.target.closest('.fig-current-link');
+        if (currentLink) {
+            e.preventDefault();
+            
+            const year = currentLink.dataset.year;
+            const season = currentLink.dataset.season;
+            
+            if (year && season) {
+                loadFigures(state, bankNo, year, season);
+            }
+        }
     });
 }
 
@@ -172,8 +187,8 @@ function loadFigures(state, bankNo, year, season) {
             display.innerHTML = displayHtml;
             
             // Update nav buttons
-            updateNavButton('.fig-nav-prev', data.prevPub, state, bankNo);
-            updateNavButton('.fig-nav-next', data.nextPub, state, bankNo);
+            updateNavButton('.fig-nav-older', data.olderPub, state, bankNo, true);
+            updateNavButton('.fig-nav-newer', data.newerPub, state, bankNo, false);
             
             // Update "view current" link
             const note = document.getElementById('figures-note');
@@ -181,7 +196,7 @@ function loadFigures(state, bankNo, year, season) {
                 if (data.isCurrent) {
                     note.innerHTML = '';
                 } else {
-                    note.innerHTML = `<a href="bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}">View current figures (${data.currentDisplay})</a>`;
+                    note.innerHTML = `<a href="bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}" class="fig-current-link" data-year="${data.currentYear}" data-season="${data.currentSeason}">View current figures (${data.currentDisplay})</a>`;
                 }
             }
             
@@ -196,30 +211,28 @@ function loadFigures(state, bankNo, year, season) {
 }
 
 /**
- * Update a navigation button (prev/next)
+ * Update a navigation button (older/newer)
  */
-function updateNavButton(selector, pubData, state, bankNo) {
+function updateNavButton(selector, pubData, state, bankNo, isOlder) {
     const container = document.querySelector('#financial-section .figures-nav');
     const oldBtn = container.querySelector(selector);
     if (!oldBtn) return;
-    
-    const isPrev = selector.includes('prev');
     
     if (pubData) {
         // Create active link
         const newBtn = document.createElement('a');
         newBtn.href = `bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}&fig_year=${pubData.year}&fig_season=${pubData.season}`;
-        newBtn.className = `fig-nav-btn ${isPrev ? 'fig-nav-prev' : 'fig-nav-next'}`;
+        newBtn.className = `fig-nav-btn ${isOlder ? 'fig-nav-older' : 'fig-nav-newer'}`;
         newBtn.dataset.year = pubData.year;
         newBtn.dataset.season = pubData.season;
-        newBtn.title = `${isPrev ? 'Newer' : 'Older'}: ${formatPublication(pubData.year, pubData.season)}`;
-        newBtn.innerHTML = isPrev ? '&lt;' : '&gt;';
+        newBtn.title = `${isOlder ? 'Older' : 'Newer'}: ${formatPublication(pubData.year, pubData.season)}`;
+        newBtn.innerHTML = isOlder ? '&lt;' : '&gt;';
         oldBtn.replaceWith(newBtn);
     } else {
         // Create disabled span
         const newBtn = document.createElement('span');
-        newBtn.className = `fig-nav-btn fig-nav-disabled ${isPrev ? 'fig-nav-prev' : 'fig-nav-next'}`;
-        newBtn.innerHTML = isPrev ? '&lt;' : '&gt;';
+        newBtn.className = `fig-nav-btn fig-nav-disabled ${isOlder ? 'fig-nav-older' : 'fig-nav-newer'}`;
+        newBtn.innerHTML = isOlder ? '&lt;' : '&gt;';
         oldBtn.replaceWith(newBtn);
     }
 }

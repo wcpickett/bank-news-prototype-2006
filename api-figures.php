@@ -47,18 +47,20 @@ if (!$financials) {
 $latest = getLatestPublicationForInstitution($pdo, $state, $bankNo);
 $isCurrent = ($year == $latest['year'] && $season == $latest['season']);
 
-// Get prev/next publications
+// Get older/newer publications
 $availablePublications = getPublicationsForInstitution($pdo, $state, $bankNo);
-$prevPub = null;
-$nextPub = null;
+$olderPub = null;
+$newerPub = null;
 
 foreach ($availablePublications as $i => $pub) {
     if ($pub['year'] == $year && $pub['season'] == $season) {
-        if ($i > 0) {
-            $prevPub = $availablePublications[$i - 1];
-        }
+        // Older = higher index (further back in time)
         if ($i < count($availablePublications) - 1) {
-            $nextPub = $availablePublications[$i + 1];
+            $olderPub = $availablePublications[$i + 1];
+        }
+        // Newer = lower index (closer to current)
+        if ($i > 0) {
+            $newerPub = $availablePublications[$i - 1];
         }
         break;
     }
@@ -83,7 +85,7 @@ echo json_encode([
     'currentYear' => $latest['year'],
     'currentSeason' => $latest['season'],
     'currentDisplay' => formatPublication($latest['year'], $latest['season']),
-    'prevPub' => $prevPub,
-    'nextPub' => $nextPub,
+    'olderPub' => $olderPub,
+    'newerPub' => $newerPub,
     'figures' => $formatted
 ]);

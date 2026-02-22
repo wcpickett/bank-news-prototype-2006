@@ -365,18 +365,24 @@ a:hover {
 }
 
 .officer-title {
-    display: block;
     color: #666;
-    font-size: 0.95rem;
+    margin-left: 8px;
 }
 
-.officers-list ul {
-    margin: 0;
-    padding-left: 20px;
+.officers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 8px 20px;
+    margin-bottom: 15px;
 }
 
-.officers-list li {
-    margin-bottom: 5px;
+.officer-item {
+    padding: 4px 0;
+}
+
+.directors {
+    margin-top: 15px;
+    line-height: 1.6;
 }
 
 /* Financial Tables */

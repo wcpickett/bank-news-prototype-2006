@@ -150,77 +150,69 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
         </div>
         <?php endif; ?>
         
-        <div class="officers-list">
-            <?php
-            $officers = [];
-            for ($i = 1; $i <= 5; $i++) {
-                $field = "officer_$i";
-                if (!empty($institution[$field])) {
-                    $officers[] = $institution[$field];
-                }
+        <?php
+        // Collect all officers
+        $officers = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $field = "officer_$i";
+            if (!empty($institution[$field])) {
+                $officers[] = $institution[$field];
             }
-            ?>
-            
-            <?php if (!empty($officers)): ?>
-            <h3>Key Officers</h3>
-            <ul>
-                <?php foreach ($officers as $officer): ?>
-                    <li><?= h($officer) ?></li>
-                <?php endforeach; ?>
-            </ul>
-            <?php endif; ?>
-            
-            <?php
-            $roles = [
-                'off_marketing' => 'Marketing',
-                'off_trust' => 'Trust',
-                'off_operations' => 'Operations',
-                'off_chief_lending' => 'Chief Lending Officer',
-                'off_finance_accounting' => 'Finance & Accounting',
-                'off_cto' => 'Chief Technology Officer',
-                'off_it_security' => 'IT/Security',
-                'off_agriculture' => 'Agriculture'
-            ];
-            
-            $roleOfficers = [];
-            foreach ($roles as $field => $label) {
-                if (!empty($institution[$field])) {
-                    $roleOfficers[$label] = $institution[$field];
-                }
+        }
+        
+        // Role-based officers
+        $roles = [
+            'off_marketing' => 'Marketing',
+            'off_trust' => 'Trust',
+            'off_operations' => 'Operations',
+            'off_chief_lending' => 'Chief Lending Officer',
+            'off_finance_accounting' => 'Finance & Accounting',
+            'off_cto' => 'Chief Technology Officer',
+            'off_it_security' => 'IT/Security',
+            'off_agriculture' => 'Agriculture'
+        ];
+        
+        foreach ($roles as $field => $label) {
+            if (!empty($institution[$field])) {
+                $officers[] = $institution[$field] . ', ' . $label;
             }
-            ?>
-            
-            <?php if (!empty($roleOfficers)): ?>
-            <h3>Department Officers</h3>
-            <dl class="role-officers">
-                <?php foreach ($roleOfficers as $role => $name): ?>
-                    <div class="role-item">
-                        <dt><?= h($role) ?></dt>
-                        <dd><?= h($name) ?></dd>
-                    </div>
-                <?php endforeach; ?>
-            </dl>
-            <?php endif; ?>
+        }
+        ?>
+        
+        <?php if (!empty($officers)): ?>
+        <div class="officers-grid">
+            <?php foreach ($officers as $officer): ?>
+                <div class="officer-item"><?= h($officer) ?></div>
+            <?php endforeach; ?>
         </div>
+        <?php endif; ?>
+        
+        <?php if ($institution['directors']): ?>
+        <div class="directors">
+            <strong>Directors:</strong> <?= h($institution['directors']) ?>
+        </div>
+        <?php endif; ?>
     </section>
     
     <!-- Financial Information -->
     <section class="detail-section" id="financial-section" 
              data-state="<?= h($currentState) ?>" 
-             data-bank-no="<?= h($bankNo) ?>">
+             data-bank-no="<?= h($bankNo) ?>"
+             data-current-year="<?= h($currentYear) ?>"
+             data-current-season="<?= h($currentSeason) ?>">
         <div class="section-header-with-nav">
             <h2>Financial Information</h2>
             <div class="figures-nav">
-                <?php if ($figPrevPub): ?>
-                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figPrevPub['year'] . '&fig_season=' . $figPrevPub['season']) ?>" 
-                       class="fig-nav-btn fig-nav-prev" 
-                       data-year="<?= h($figPrevPub['year']) ?>"
-                       data-season="<?= h($figPrevPub['season']) ?>"
-                       title="Newer: <?= h(formatPublication($figPrevPub['year'], $figPrevPub['season'])) ?>">
+                <?php if ($figOlderPub): ?>
+                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figOlderPub['year'] . '&fig_season=' . $figOlderPub['season']) ?>" 
+                       class="fig-nav-btn fig-nav-older" 
+                       data-year="<?= h($figOlderPub['year']) ?>"
+                       data-season="<?= h($figOlderPub['season']) ?>"
+                       title="Older: <?= h(formatPublication($figOlderPub['year'], $figOlderPub['season'])) ?>">
                         &lt;
                     </a>
                 <?php else: ?>
-                    <span class="fig-nav-btn fig-nav-disabled fig-nav-prev">&lt;</span>
+                    <span class="fig-nav-btn fig-nav-disabled fig-nav-older">&lt;</span>
                 <?php endif; ?>
                 
                 <span class="figures-year-display" id="figures-year-display">
@@ -230,16 +222,16 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                     <?php endif; ?>
                 </span>
                 
-                <?php if ($figNextPub): ?>
-                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figNextPub['year'] . '&fig_season=' . $figNextPub['season']) ?>" 
-                       class="fig-nav-btn fig-nav-next" 
-                       data-year="<?= h($figNextPub['year']) ?>"
-                       data-season="<?= h($figNextPub['season']) ?>"
-                       title="Older: <?= h(formatPublication($figNextPub['year'], $figNextPub['season'])) ?>">
+                <?php if ($figNewerPub): ?>
+                    <a href="<?= h($figBaseUrl . '&fig_year=' . $figNewerPub['year'] . '&fig_season=' . $figNewerPub['season']) ?>" 
+                       class="fig-nav-btn fig-nav-newer" 
+                       data-year="<?= h($figNewerPub['year']) ?>"
+                       data-season="<?= h($figNewerPub['season']) ?>"
+                       title="Newer: <?= h(formatPublication($figNewerPub['year'], $figNewerPub['season'])) ?>">
                         &gt;
                     </a>
                 <?php else: ?>
-                    <span class="fig-nav-btn fig-nav-disabled fig-nav-next">&gt;</span>
+                    <span class="fig-nav-btn fig-nav-disabled fig-nav-newer">&gt;</span>
                 <?php endif; ?>
             </div>
         </div>
@@ -350,7 +342,9 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
         
         <p class="figures-note" id="figures-note">
             <?php if (!$figIsCurrent): ?>
-                <a href="<?= h($figBaseUrl) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
+                <a href="<?= h($figBaseUrl) ?>" class="fig-current-link"
+                   data-year="<?= h($currentYear) ?>"
+                   data-season="<?= h($currentSeason) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
             <?php endif; ?>
         </p>
     </section>

@@ -108,12 +108,12 @@ if ($figYear == $currentYear && $figSeason == $currentSeason) {
     }
 }
 
-// Determine prev/next publications for figures navigation
-$figPrevPub = null;
-$figNextPub = null;
+// Determine older/newer publications for figures navigation
+$figOlderPub = null;
+$figNewerPub = null;
 $currentFigIndex = null;
 
-// Publications are ordered newest first, so "prev" goes to newer, "next" goes to older
+// Publications are ordered newest first
 foreach ($availablePublications as $i => $pub) {
     if ($pub['year'] == $figYear && $pub['season'] == $figSeason) {
         $currentFigIndex = $i;
@@ -122,13 +122,13 @@ foreach ($availablePublications as $i => $pub) {
 }
 
 if ($currentFigIndex !== null) {
-    // Previous = newer publication (lower index)
-    if ($currentFigIndex > 0) {
-        $figPrevPub = $availablePublications[$currentFigIndex - 1];
-    }
-    // Next = older publication (higher index)
+    // Older = higher index (further back in time)
     if ($currentFigIndex < count($availablePublications) - 1) {
-        $figNextPub = $availablePublications[$currentFigIndex + 1];
+        $figOlderPub = $availablePublications[$currentFigIndex + 1];
+    }
+    // Newer = lower index (closer to current)
+    if ($currentFigIndex > 0) {
+        $figNewerPub = $availablePublications[$currentFigIndex - 1];
     }
 }
 
