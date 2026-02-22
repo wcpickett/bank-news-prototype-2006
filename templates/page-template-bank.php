@@ -205,20 +205,25 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
     </section>
     
     <!-- Financial Information -->
-    <section class="detail-section">
+    <section class="detail-section" id="financial-section" 
+             data-state="<?= h($currentState) ?>" 
+             data-bank-no="<?= h($bankNo) ?>">
         <div class="section-header-with-nav">
             <h2>Financial Information</h2>
             <div class="figures-nav">
                 <?php if ($figPrevPub): ?>
                     <a href="<?= h($figBaseUrl . '&fig_year=' . $figPrevPub['year'] . '&fig_season=' . $figPrevPub['season']) ?>" 
-                       class="fig-nav-btn fig-nav-prev" title="Newer: <?= h(formatPublication($figPrevPub['year'], $figPrevPub['season'])) ?>">
+                       class="fig-nav-btn fig-nav-prev" 
+                       data-year="<?= h($figPrevPub['year']) ?>"
+                       data-season="<?= h($figPrevPub['season']) ?>"
+                       title="Newer: <?= h(formatPublication($figPrevPub['year'], $figPrevPub['season'])) ?>">
                         &lt;
                     </a>
                 <?php else: ?>
-                    <span class="fig-nav-btn fig-nav-disabled">&lt;</span>
+                    <span class="fig-nav-btn fig-nav-disabled fig-nav-prev">&lt;</span>
                 <?php endif; ?>
                 
-                <span class="figures-year-display">
+                <span class="figures-year-display" id="figures-year-display">
                     <?= h(formatPublication($figYear, $figSeason)) ?>
                     <?php if ($figIsCurrent): ?>
                         <span class="current-badge">Current</span>
@@ -227,18 +232,21 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 
                 <?php if ($figNextPub): ?>
                     <a href="<?= h($figBaseUrl . '&fig_year=' . $figNextPub['year'] . '&fig_season=' . $figNextPub['season']) ?>" 
-                       class="fig-nav-btn fig-nav-next" title="Older: <?= h(formatPublication($figNextPub['year'], $figNextPub['season'])) ?>">
+                       class="fig-nav-btn fig-nav-next" 
+                       data-year="<?= h($figNextPub['year']) ?>"
+                       data-season="<?= h($figNextPub['season']) ?>"
+                       title="Older: <?= h(formatPublication($figNextPub['year'], $figNextPub['season'])) ?>">
                         &gt;
                     </a>
                 <?php else: ?>
-                    <span class="fig-nav-btn fig-nav-disabled">&gt;</span>
+                    <span class="fig-nav-btn fig-nav-disabled fig-nav-next">&gt;</span>
                 <?php endif; ?>
             </div>
         </div>
         
         <p class="table-note">* All figures in thousands</p>
         
-        <div class="financial-tables">
+        <div class="financial-tables" id="financial-tables">
             <div class="financial-table">
                 <h3>Assets</h3>
                 <table>
@@ -246,43 +254,43 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                         <?php if ($financials['total_assets']): ?>
                         <tr class="total-row">
                             <td><strong>Total Assets</strong></td>
-                            <td class="text-right"><strong><?= formatCurrencyThousands($financials['total_assets']) ?></strong></td>
+                            <td class="text-right"><strong><span data-field="total_assets"><?= formatCurrencyThousands($financials['total_assets']) ?></span></strong></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_loans']): ?>
                         <tr>
                             <td>Total Loans</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['total_loans']) ?></td>
+                            <td class="text-right"><span data-field="total_loans"><?= formatCurrencyThousands($financials['total_loans']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['cash_due']): ?>
                         <tr>
                             <td>Cash Due</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['cash_due']) ?></td>
+                            <td class="text-right"><span data-field="cash_due"><?= formatCurrencyThousands($financials['cash_due']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['securities']): ?>
                         <tr>
                             <td>Securities</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['securities']) ?></td>
+                            <td class="text-right"><span data-field="securities"><?= formatCurrencyThousands($financials['securities']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_investments']): ?>
                         <tr>
                             <td>Total Investments</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['total_investments']) ?></td>
+                            <td class="text-right"><span data-field="total_investments"><?= formatCurrencyThousands($financials['total_investments']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['fed_funds_sold']): ?>
                         <tr>
                             <td>Fed Funds Sold</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['fed_funds_sold']) ?></td>
+                            <td class="text-right"><span data-field="fed_funds_sold"><?= formatCurrencyThousands($financials['fed_funds_sold']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['all_other_assets']): ?>
                         <tr>
                             <td>All Other Assets</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['all_other_assets']) ?></td>
+                            <td class="text-right"><span data-field="all_other_assets"><?= formatCurrencyThousands($financials['all_other_assets']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
@@ -296,43 +304,43 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                         <?php if ($financials['capital_stock']): ?>
                         <tr>
                             <td>Capital Stock</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['capital_stock']) ?></td>
+                            <td class="text-right"><span data-field="capital_stock"><?= formatCurrencyThousands($financials['capital_stock']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['surplus']): ?>
                         <tr>
                             <td>Surplus</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['surplus']) ?></td>
+                            <td class="text-right"><span data-field="surplus"><?= formatCurrencyThousands($financials['surplus']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['undivided_profits']): ?>
                         <tr>
                             <td>Undivided Profits</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['undivided_profits']) ?></td>
+                            <td class="text-right"><span data-field="undivided_profits"><?= formatCurrencyThousands($financials['undivided_profits']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['retained_earnings']): ?>
                         <tr>
                             <td>Retained Earnings</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['retained_earnings']) ?></td>
+                            <td class="text-right"><span data-field="retained_earnings"><?= formatCurrencyThousands($financials['retained_earnings']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['total_deposits']): ?>
                         <tr>
                             <td>Total Deposits</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['total_deposits']) ?></td>
+                            <td class="text-right"><span data-field="total_deposits"><?= formatCurrencyThousands($financials['total_deposits']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['shares']): ?>
                         <tr>
                             <td>Shares</td>
-                            <td class="text-right"><?= formatCurrencyThousands($financials['shares']) ?></td>
+                            <td class="text-right"><span data-field="shares"><?= formatCurrencyThousands($financials['shares']) ?></span></td>
                         </tr>
                         <?php endif; ?>
                         <?php if ($financials['net_income']): ?>
                         <tr class="total-row">
                             <td><strong>Net Income</strong></td>
-                            <td class="text-right"><strong><?= formatCurrencyThousands($financials['net_income']) ?></strong></td>
+                            <td class="text-right"><strong><span data-field="net_income"><?= formatCurrencyThousands($financials['net_income']) ?></span></strong></td>
                         </tr>
                         <?php endif; ?>
                     </tbody>
@@ -340,11 +348,11 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
             </div>
         </div>
         
-        <?php if (!$figIsCurrent): ?>
-        <p class="figures-note">
-            <a href="<?= h($figBaseUrl) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
+        <p class="figures-note" id="figures-note">
+            <?php if (!$figIsCurrent): ?>
+                <a href="<?= h($figBaseUrl) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
+            <?php endif; ?>
         </p>
-        <?php endif; ?>
     </section>
     
     <!-- Memberships -->
