@@ -182,13 +182,16 @@ function loadFigures(state, bankNo, year, season) {
             // Update year display
             display.textContent = data.displayYear;
             
-            // Update current badge visibility
-            const badge = document.getElementById('current-badge');
-            if (badge) {
+            // Update current/historical badge visibility
+            const currentBadge = document.getElementById('current-badge');
+            const historicalBadge = document.getElementById('historical-badge');
+            if (currentBadge && historicalBadge) {
                 if (data.isCurrent) {
-                    badge.classList.remove('current-badge-hidden');
+                    currentBadge.classList.remove('current-badge-hidden');
+                    historicalBadge.classList.add('historical-badge-hidden');
                 } else {
-                    badge.classList.add('current-badge-hidden');
+                    currentBadge.classList.add('current-badge-hidden');
+                    historicalBadge.classList.remove('historical-badge-hidden');
                 }
             }
             

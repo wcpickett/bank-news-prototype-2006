@@ -215,8 +215,10 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
             <div class="figures-nav">
                 <?php if ($figIsCurrent): ?>
                     <span class="current-badge" id="current-badge">Current</span>
+                    <span class="historical-badge historical-badge-hidden" id="historical-badge">Historical</span>
                 <?php else: ?>
                     <span class="current-badge current-badge-hidden" id="current-badge">Current</span>
+                    <span class="historical-badge" id="historical-badge">Historical</span>
                 <?php endif; ?>
                 
                 <?php if ($figOlderPub): ?>
