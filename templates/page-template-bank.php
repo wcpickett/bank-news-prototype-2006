@@ -361,7 +361,9 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 <h3 id="chart-title">Historical Data</h3>
                 <button type="button" class="chart-close" id="chart-close">&times;</button>
             </div>
-            <canvas id="financial-chart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="financial-chart"></canvas>
+            </div>
         </div>
         
         <p class="figures-note" id="figures-note">

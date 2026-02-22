@@ -939,9 +939,26 @@ a:hover {
     color: #333;
 }
 
-#financial-chart {
-    width: 100%;
+.chart-wrapper {
+    position: relative;
     height: 300px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .chart-wrapper {
+        height: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chart-wrapper {
+        height: 200px;
+    }
+    
+    .financial-chart-container {
+        padding: 15px;
+    }
 }
 
 @media (max-width: 600px) {
@@ -953,5 +970,215 @@ a:hover {
     .figures-nav {
         width: 100%;
         justify-content: space-between;
+    }
+}
+
+/* ============================================================
+   COMPREHENSIVE RESPONSIVE DESIGN
+   ============================================================ */
+
+/* Tablet */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    
+    .site-main {
+        padding: 20px 0;
+    }
+    
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    /* Detail page sections */
+    .detail-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .detail-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    /* Info grid - single column on tablet */
+    .info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    /* Financial tables stack */
+    .financial-tables {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Tables scroll horizontally */
+    .results-table,
+    .branches-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Officers list */
+    .officer-primary {
+        font-size: 1rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+    body {
+        font-size: 15px;
+    }
+    
+    .container {
+        padding: 0 12px;
+    }
+    
+    .site-header {
+        padding: 12px 0;
+    }
+    
+    .site-title a {
+        font-size: 1.2rem;
+    }
+    
+    .main-nav a {
+        margin-left: 12px;
+        font-size: 0.9rem;
+    }
+    
+    .page-header {
+        margin-bottom: 15px;
+    }
+    
+    .page-header h1 {
+        font-size: 1.3rem;
+    }
+    
+    .breadcrumb {
+        font-size: 0.8rem;
+    }
+    
+    /* Detail sections */
+    .detail-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .detail-section h2 {
+        font-size: 1.1rem;
+    }
+    
+    .detail-section h3 {
+        font-size: 1rem;
+    }
+    
+    /* Info items */
+    .info-item label {
+        font-size: 0.75rem;
+    }
+    
+    /* Tables */
+    .financial-table table {
+        font-size: 0.9rem;
+    }
+    
+    .financial-table td {
+        padding: 8px 6px;
+    }
+    
+    /* Clickable rows - smaller icon */
+    .clickable-row td:first-child {
+        padding-left: 18px;
+    }
+    
+    .clickable-row td:first-child::before {
+        font-size: 0.7rem;
+        left: 2px;
+    }
+    
+    /* Memberships */
+    .memberships-list {
+        columns: 1;
+    }
+    
+    /* Filter pills */
+    .filter-pills {
+        gap: 6px;
+    }
+    
+    .pills-label {
+        display: none;
+    }
+    
+    /* Figures navigation */
+    .figures-year-display {
+        font-size: 0.9rem;
+        padding: 0 6px;
+    }
+    
+    .current-badge,
+    .historical-badge {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+    
+    .fig-nav-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+    
+    /* Chart */
+    .financial-chart-container {
+        padding: 12px;
+        margin-top: 15px;
+    }
+    
+    .chart-header h3 {
+        font-size: 1rem;
+    }
+}
+
+/* Touch-friendly adjustments */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger tap targets */
+    .clickable-row td {
+        padding: 12px 8px;
+    }
+    
+    .filter-option {
+        padding: 10px 0;
+    }
+    
+    .accordion-header {
+        padding: 14px 15px;
+    }
+    
+    .fig-nav-btn {
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* Always show chart icon on touch devices */
+    .clickable-row td:first-child::before {
+        opacity: 0.5;
+    }
+}
+
+/* Print styles */
+@media print {
+    .site-header,
+    .site-footer,
+    .figures-nav,
+    .financial-chart-container,
+    .filter-pills {
+        display: none;
+    }
+    
+    .detail-section {
+        break-inside: avoid;
     }
 }
