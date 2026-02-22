@@ -150,48 +150,58 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
         </div>
         <?php endif; ?>
         
-        <?php
-        // Collect all officers
-        $officers = [];
-        for ($i = 1; $i <= 5; $i++) {
-            $field = "officer_$i";
-            if (!empty($institution[$field])) {
-                $officers[] = $institution[$field];
+        <div class="officers-list">
+            <?php
+            $officers = [];
+            for ($i = 1; $i <= 5; $i++) {
+                $field = "officer_$i";
+                if (!empty($institution[$field])) {
+                    $officers[] = $institution[$field];
+                }
             }
-        }
-        
-        // Role-based officers
-        $roles = [
-            'off_marketing' => 'Marketing',
-            'off_trust' => 'Trust',
-            'off_operations' => 'Operations',
-            'off_chief_lending' => 'Chief Lending Officer',
-            'off_finance_accounting' => 'Finance & Accounting',
-            'off_cto' => 'Chief Technology Officer',
-            'off_it_security' => 'IT/Security',
-            'off_agriculture' => 'Agriculture'
-        ];
-        
-        foreach ($roles as $field => $label) {
-            if (!empty($institution[$field])) {
-                $officers[] = $institution[$field] . ', ' . $label;
+            ?>
+            
+            <?php if (!empty($officers)): ?>
+            <h3>Key Officers</h3>
+            <ul>
+                <?php foreach ($officers as $officer): ?>
+                    <li><?= h($officer) ?></li>
+                <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+            
+            <?php
+            $roles = [
+                'off_marketing' => 'Marketing',
+                'off_trust' => 'Trust',
+                'off_operations' => 'Operations',
+                'off_chief_lending' => 'Chief Lending Officer',
+                'off_finance_accounting' => 'Finance & Accounting',
+                'off_cto' => 'Chief Technology Officer',
+                'off_it_security' => 'IT/Security',
+                'off_agriculture' => 'Agriculture'
+            ];
+            
+            $roleOfficers = [];
+            foreach ($roles as $field => $label) {
+                if (!empty($institution[$field])) {
+                    $roleOfficers[$label] = $institution[$field];
+                }
             }
-        }
-        ?>
-        
-        <?php if (!empty($officers)): ?>
-        <div class="officers-grid">
-            <?php foreach ($officers as $officer): ?>
-                <div class="officer-item"><?= h($officer) ?></div>
-            <?php endforeach; ?>
+            ?>
+            
+            <?php if (!empty($roleOfficers)): ?>
+            <h3>Department Contacts</h3>
+            <div class="info-grid">
+                <?php foreach ($roleOfficers as $label => $name): ?>
+                <div class="info-item">
+                    <label><?= h($label) ?></label>
+                    <div><?= h($name) ?></div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            <?php endif; ?>
         </div>
-        <?php endif; ?>
-        
-        <?php if ($institution['directors']): ?>
-        <div class="directors">
-            <strong>Directors:</strong> <?= h($institution['directors']) ?>
-        </div>
-        <?php endif; ?>
     </section>
     
     <!-- Financial Information -->
