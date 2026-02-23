@@ -212,6 +212,15 @@ function loadFigures(state, bankNo, year, season) {
                 }
             }
             
+            // Update data attributes for chart
+            section.dataset.figYear = year;
+            section.dataset.figSeason = season;
+            
+            // Refresh chart if open
+            if (section.refreshChart) {
+                section.refreshChart();
+            }
+            
             // Update URL without reload
             const newUrl = `bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}&fig_year=${year}&fig_season=${season}`;
             history.pushState({year, season}, '', newUrl);
@@ -283,6 +292,8 @@ function initFinancialCharts() {
     
     let chartInstance = null;
     let historyData = null;
+    let currentField = null;
+    let currentLabel = null;
     
     // Handle row clicks
     section.querySelectorAll('.clickable-row').forEach(row => {
@@ -293,6 +304,9 @@ function initFinancialCharts() {
             // Highlight selected row
             section.querySelectorAll('.clickable-row').forEach(r => r.classList.remove('selected'));
             this.classList.add('selected');
+            
+            currentField = field;
+            currentLabel = label;
             
             // Load history data if not cached
             if (!historyData) {
@@ -316,7 +330,7 @@ function initFinancialCharts() {
             }
             
             // Render chart
-            renderChart(field, label);
+            renderChart();
         });
     });
     
@@ -329,21 +343,71 @@ function initFinancialCharts() {
                 chartInstance.destroy();
                 chartInstance = null;
             }
+            currentField = null;
+            currentLabel = null;
         });
     }
     
-    function renderChart(field, label) {
-        chartTitle.textContent = label + ' Over Time';
+    // Expose function to refresh chart when year changes
+    section.refreshChart = function() {
+        if (currentField && historyData) {
+            renderChart();
+        }
+    };
+    
+    function renderChart() {
+        chartTitle.textContent = currentLabel + ' Over Time';
         chartContainer.style.display = 'block';
+        
+        // Get current fig year/season from data attributes
+        const figYear = section.dataset.figYear;
+        const figSeason = section.dataset.figSeason;
+        const currentEditionLabel = formatPublication(figYear, figSeason);
         
         // Extract labels and values
         const labels = historyData.history.map(h => h.label);
-        const values = historyData.history.map(h => h[field] || 0);
+        const values = historyData.history.map(h => h[currentField] || 0);
+        
+        // Find index of current edition
+        const currentIndex = labels.indexOf(currentEditionLabel);
+        
+        // Create point styling arrays
+        const pointRadius = labels.map((_, i) => i === currentIndex ? 8 : 5);
+        const pointBackgroundColor = labels.map((_, i) => 
+            i === currentIndex ? '#e74c3c' : '#2c5aa0'
+        );
+        const pointBorderColor = labels.map((_, i) => 
+            i === currentIndex ? '#c0392b' : '#1a3d6e'
+        );
+        const pointBorderWidth = labels.map((_, i) => i === currentIndex ? 3 : 1);
         
         // Destroy existing chart
         if (chartInstance) {
             chartInstance.destroy();
         }
+        
+        // Vertical line plugin
+        const verticalLinePlugin = {
+            id: 'verticalLine',
+            afterDraw: (chart) => {
+                if (currentIndex === -1) return;
+                
+                const ctx = chart.ctx;
+                const xAxis = chart.scales.x;
+                const yAxis = chart.scales.y;
+                const x = xAxis.getPixelForValue(currentIndex);
+                
+                ctx.save();
+                ctx.beginPath();
+                ctx.moveTo(x, yAxis.top);
+                ctx.lineTo(x, yAxis.bottom);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(231, 76, 60, 0.5)';
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.restore();
+            }
+        };
         
         // Create new chart
         chartInstance = new Chart(canvas, {
@@ -351,16 +415,20 @@ function initFinancialCharts() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: label + ' ($000s)',
+                    label: currentLabel + ' ($000s)',
                     data: values,
                     borderColor: '#2c5aa0',
                     backgroundColor: 'rgba(44, 90, 160, 0.1)',
                     fill: true,
                     tension: 0.1,
-                    pointRadius: 5,
-                    pointHoverRadius: 7
+                    pointRadius: pointRadius,
+                    pointHoverRadius: 9,
+                    pointBackgroundColor: pointBackgroundColor,
+                    pointBorderColor: pointBorderColor,
+                    pointBorderWidth: pointBorderWidth
                 }]
             },
+            plugins: [verticalLinePlugin],
             options: {
                 responsive: true,
                 maintainAspectRatio: false,

@@ -209,7 +209,9 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
              data-state="<?= h($currentState) ?>" 
              data-bank-no="<?= h($bankNo) ?>"
              data-current-year="<?= h($currentYear) ?>"
-             data-current-season="<?= h($currentSeason) ?>">
+             data-current-season="<?= h($currentSeason) ?>"
+             data-fig-year="<?= h($figYear) ?>"
+             data-fig-season="<?= h($figSeason) ?>">
         <div class="section-header-with-nav">
             <h2>Financial Information</h2>
             <div class="figures-nav">
