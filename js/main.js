@@ -159,6 +159,8 @@ function initFiguresNav() {
 function loadFigures(state, bankNo, year, season) {
     const url = `api-figures.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}&year=${encodeURIComponent(year)}&season=${encodeURIComponent(season)}`;
     
+    const section = document.getElementById('financial-section');
+    
     // Show loading state
     const display = document.getElementById('figures-year-display');
     if (display) {
@@ -213,12 +215,15 @@ function loadFigures(state, bankNo, year, season) {
             }
             
             // Update data attributes for chart
-            section.dataset.figYear = year;
-            section.dataset.figSeason = season;
-            
-            // Refresh chart if open
-            if (section.refreshChart) {
-                section.refreshChart();
+            const section = document.getElementById('financial-section');
+            if (section) {
+                section.dataset.figYear = year;
+                section.dataset.figSeason = season;
+                
+                // Refresh chart if open
+                if (section.refreshChart) {
+                    section.refreshChart();
+                }
             }
             
             // Update URL without reload
