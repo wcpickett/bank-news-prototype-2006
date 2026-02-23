@@ -162,10 +162,10 @@ function loadFigures(state, bankNo, year, season) {
     const section = document.getElementById('financial-section');
     
     // Show loading state
-    const display = document.getElementById('figures-year-display');
-    if (display) {
-        display.innerHTML = 'Loading...';
-    }
+    // Show loading state
+    document.querySelectorAll('[id^="figures-year-display"]').forEach(el => {
+        el.textContent = 'Loading...';
+    });
     
     fetch(url)
         .then(response => response.json())
@@ -184,35 +184,45 @@ function loadFigures(state, bankNo, year, season) {
                 }
             }
             
-            // Update year display
-            display.textContent = data.displayYear;
+            // Update year display (both top and bottom)
+            document.querySelectorAll('[id^="figures-year-display"]').forEach(el => {
+                el.textContent = data.displayYear;
+            });
             
-            // Update current/historical badge visibility
-            const currentBadge = document.getElementById('current-badge');
-            const historicalBadge = document.getElementById('historical-badge');
-            if (currentBadge && historicalBadge) {
+            // Update current/historical badge visibility (both top and bottom)
+            document.querySelectorAll('[id^="current-badge"]').forEach(el => {
                 if (data.isCurrent) {
-                    currentBadge.classList.remove('current-badge-hidden');
-                    historicalBadge.classList.add('historical-badge-hidden');
+                    el.classList.remove('current-badge-hidden');
                 } else {
-                    currentBadge.classList.add('current-badge-hidden');
-                    historicalBadge.classList.remove('historical-badge-hidden');
+                    el.classList.add('current-badge-hidden');
                 }
-            }
-            
-            // Update nav buttons
-            updateNavButton('.fig-nav-older', data.olderPub, state, bankNo, true);
-            updateNavButton('.fig-nav-newer', data.newerPub, state, bankNo, false);
-            
-            // Update "view current" link
-            const note = document.getElementById('figures-note');
-            if (note) {
+            });
+            document.querySelectorAll('[id^="historical-badge"]').forEach(el => {
                 if (data.isCurrent) {
-                    note.innerHTML = '';
+                    el.classList.add('historical-badge-hidden');
                 } else {
-                    note.innerHTML = `<a href="bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}" class="fig-current-link" data-year="${data.currentYear}" data-season="${data.currentSeason}">View current figures (${data.currentDisplay})</a>`;
+                    el.classList.remove('historical-badge-hidden');
                 }
-            }
+            });
+            
+            // Update Return to Current badges
+            document.querySelectorAll('.return-current-badge').forEach(el => {
+                if (data.isCurrent) {
+                    el.classList.add('return-current-hidden');
+                    el.removeAttribute('href');
+                } else {
+                    el.classList.remove('return-current-hidden');
+                    el.href = `bank.php?state=${encodeURIComponent(state)}&id=${encodeURIComponent(bankNo)}`;
+                    el.dataset.year = data.currentYear;
+                    el.dataset.season = data.currentSeason;
+                }
+            });
+            
+            // Update nav buttons (both top and bottom)
+            document.querySelectorAll('.figures-nav').forEach(nav => {
+                updateNavButton(nav, '.fig-nav-older', data.olderPub, state, bankNo, true);
+                updateNavButton(nav, '.fig-nav-newer', data.newerPub, state, bankNo, false);
+            });
             
             // Update data attributes for chart
             const section = document.getElementById('financial-section');
@@ -232,15 +242,16 @@ function loadFigures(state, bankNo, year, season) {
         })
         .catch(err => {
             console.error('Failed to load figures:', err);
-            display.innerHTML = 'Error loading data';
+            document.querySelectorAll('[id^="figures-year-display"]').forEach(el => {
+                el.textContent = 'Error loading data';
+            });
         });
 }
 
 /**
  * Update a navigation button (older/newer)
  */
-function updateNavButton(selector, pubData, state, bankNo, isOlder) {
-    const container = document.querySelector('#financial-section .figures-nav');
+function updateNavButton(container, selector, pubData, state, bankNo, isOlder) {
     const oldBtn = container.querySelector(selector);
     if (!oldBtn) return;
     

@@ -214,13 +214,21 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
              data-fig-season="<?= h($figSeason) ?>">
         <div class="section-header-with-nav">
             <h2>Financial Information</h2>
-            <div class="figures-nav">
-                <?php if ($figIsCurrent): ?>
-                    <span class="current-badge" id="current-badge">Current</span>
-                    <span class="historical-badge historical-badge-hidden" id="historical-badge">Historical</span>
+            <div class="figures-nav" id="figures-nav-top">
+                <?php if (!$figIsCurrent): ?>
+                    <a href="<?= h($figBaseUrl) ?>" class="return-current-badge fig-current-link"
+                       data-year="<?= h($currentYear) ?>"
+                       data-season="<?= h($currentSeason) ?>">Return to Current</a>
                 <?php else: ?>
-                    <span class="current-badge current-badge-hidden" id="current-badge">Current</span>
-                    <span class="historical-badge" id="historical-badge">Historical</span>
+                    <span class="return-current-badge return-current-hidden">Return to Current</span>
+                <?php endif; ?>
+                
+                <?php if ($figIsCurrent): ?>
+                    <span class="current-badge" id="current-badge-top">Current</span>
+                    <span class="historical-badge historical-badge-hidden" id="historical-badge-top">Historical</span>
+                <?php else: ?>
+                    <span class="current-badge current-badge-hidden" id="current-badge-top">Current</span>
+                    <span class="historical-badge" id="historical-badge-top">Historical</span>
                 <?php endif; ?>
                 
                 <?php if ($figOlderPub): ?>
@@ -235,7 +243,7 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                     <span class="fig-nav-btn fig-nav-disabled fig-nav-older">&lt;</span>
                 <?php endif; ?>
                 
-                <span class="figures-year-display" id="figures-year-display">
+                <span class="figures-year-display" id="figures-year-display-top">
                     <?= h(formatPublication($figYear, $figSeason)) ?>
                 </span>
                 
@@ -368,13 +376,52 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
             </div>
         </div>
         
-        <p class="figures-note" id="figures-note">
+        <!-- Bottom Navigation (duplicate) -->
+        <div class="figures-nav figures-nav-bottom" id="figures-nav-bottom">
             <?php if (!$figIsCurrent): ?>
-                <a href="<?= h($figBaseUrl) ?>" class="fig-current-link"
+                <a href="<?= h($figBaseUrl) ?>" class="return-current-badge fig-current-link"
                    data-year="<?= h($currentYear) ?>"
-                   data-season="<?= h($currentSeason) ?>">View current figures (<?= h(formatPublication($currentYear, $currentSeason)) ?>)</a>
+                   data-season="<?= h($currentSeason) ?>">Return to Current</a>
+            <?php else: ?>
+                <span class="return-current-badge return-current-hidden">Return to Current</span>
             <?php endif; ?>
-        </p>
+            
+            <?php if ($figIsCurrent): ?>
+                <span class="current-badge" id="current-badge-bottom">Current</span>
+                <span class="historical-badge historical-badge-hidden" id="historical-badge-bottom">Historical</span>
+            <?php else: ?>
+                <span class="current-badge current-badge-hidden" id="current-badge-bottom">Current</span>
+                <span class="historical-badge" id="historical-badge-bottom">Historical</span>
+            <?php endif; ?>
+            
+            <?php if ($figOlderPub): ?>
+                <a href="<?= h($figBaseUrl . '&fig_year=' . $figOlderPub['year'] . '&fig_season=' . $figOlderPub['season']) ?>" 
+                   class="fig-nav-btn fig-nav-older" 
+                   data-year="<?= h($figOlderPub['year']) ?>"
+                   data-season="<?= h($figOlderPub['season']) ?>"
+                   title="Older: <?= h(formatPublication($figOlderPub['year'], $figOlderPub['season'])) ?>">
+                    &lt;
+                </a>
+            <?php else: ?>
+                <span class="fig-nav-btn fig-nav-disabled fig-nav-older">&lt;</span>
+            <?php endif; ?>
+            
+            <span class="figures-year-display" id="figures-year-display-bottom">
+                <?= h(formatPublication($figYear, $figSeason)) ?>
+            </span>
+            
+            <?php if ($figNewerPub): ?>
+                <a href="<?= h($figBaseUrl . '&fig_year=' . $figNewerPub['year'] . '&fig_season=' . $figNewerPub['season']) ?>" 
+                   class="fig-nav-btn fig-nav-newer" 
+                   data-year="<?= h($figNewerPub['year']) ?>"
+                   data-season="<?= h($figNewerPub['season']) ?>"
+                   title="Newer: <?= h(formatPublication($figNewerPub['year'], $figNewerPub['season'])) ?>">
+                    &gt;
+                </a>
+            <?php else: ?>
+                <span class="fig-nav-btn fig-nav-disabled fig-nav-newer">&gt;</span>
+            <?php endif; ?>
+        </div>
     </section>
     
     <!-- Memberships -->

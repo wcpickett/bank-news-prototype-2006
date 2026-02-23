@@ -795,6 +795,11 @@ a:hover {
     gap: 10px;
 }
 
+.figures-nav-bottom {
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
 .fig-nav-btn {
     display: inline-flex;
     align-items: center;
@@ -831,10 +836,29 @@ a:hover {
 .figures-year-display {
     font-weight: 600;
     font-size: 1rem;
-    padding: 0 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    width: 100px;
+    text-align: center;
+}
+
+.return-current-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: #0066cc;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 10px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.return-current-badge:hover {
+    background: #0052a3;
+    text-decoration: none;
+}
+
+.return-current-hidden {
+    visibility: hidden;
 }
 
 .current-badge {
@@ -865,11 +889,6 @@ a:hover {
 
 .historical-badge-hidden {
     display: none;
-}
-
-.figures-note {
-    margin-top: 15px;
-    font-size: 0.9rem;
 }
 
 /* Clickable financial rows */
@@ -969,7 +988,9 @@ a:hover {
     
     .figures-nav {
         width: 100%;
-        justify-content: space-between;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 }
 
@@ -1108,11 +1129,12 @@ a:hover {
     /* Figures navigation */
     .figures-year-display {
         font-size: 0.9rem;
-        padding: 0 6px;
+        width: 85px;
     }
     
     .current-badge,
-    .historical-badge {
+    .historical-badge,
+    .return-current-badge {
         font-size: 0.65rem;
         padding: 2px 6px;
     }
@@ -1121,6 +1143,12 @@ a:hover {
         width: 28px;
         height: 28px;
         font-size: 1rem;
+    }
+    
+    .figures-nav-bottom {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
     }
     
     /* Chart */
