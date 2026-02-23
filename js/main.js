@@ -379,10 +379,10 @@ function initFinancialCharts() {
         // Create point styling arrays
         const pointRadius = labels.map((_, i) => i === currentIndex ? 8 : 5);
         const pointBackgroundColor = labels.map((_, i) => 
-            i === currentIndex ? '#e74c3c' : '#2c5aa0'
+            i === currentIndex ? '#28a745' : '#2c5aa0'
         );
         const pointBorderColor = labels.map((_, i) => 
-            i === currentIndex ? '#c0392b' : '#1a3d6e'
+            i === currentIndex ? '#1e7e34' : '#1a3d6e'
         );
         const pointBorderWidth = labels.map((_, i) => i === currentIndex ? 3 : 1);
         
@@ -407,7 +407,7 @@ function initFinancialCharts() {
                 ctx.moveTo(x, yAxis.top);
                 ctx.lineTo(x, yAxis.bottom);
                 ctx.lineWidth = 2;
-                ctx.strokeStyle = 'rgba(231, 76, 60, 0.5)';
+                ctx.strokeStyle = 'rgba(40, 167, 69, 0.5)';
                 ctx.setLineDash([5, 5]);
                 ctx.stroke();
                 ctx.restore();
@@ -437,6 +437,7 @@ function initFinancialCharts() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: false,
                 plugins: {
                     legend: {
                         display: false
