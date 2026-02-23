@@ -201,6 +201,13 @@ $figBaseUrl = 'bank.php?state=' . urlencode($currentState) . '&id=' . urlencode(
                 <?php endforeach; ?>
             </div>
             <?php endif; ?>
+            
+            <?php if ($institution['directors']): ?>
+            <div class="directors-list">
+                <h3>Directors</h3>
+                <p><?= h($institution['directors']) ?></p>
+            </div>
+            <?php endif; ?>
         </div>
     </section>
     

@@ -379,6 +379,19 @@ a:hover {
     margin-bottom: 5px;
 }
 
+.directors-list {
+    margin-top: 20px;
+}
+
+.directors-list h3 {
+    margin-bottom: 8px;
+}
+
+.directors-list p {
+    margin: 0;
+    line-height: 1.6;
+}
+
 /* Financial Tables */
 .financial-tables {
     display: grid;
